@@ -21,7 +21,7 @@ namespace CLIHelper
                 {
                     arg = arg[2..];
                 }
-                else if (arg.StartsWith('/') || arg.StartsWith('/'))
+                else if (arg.StartsWith('-') || arg.StartsWith('/'))
                 {
                     arg = arg[1..];
                 }
