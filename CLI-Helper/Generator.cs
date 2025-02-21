@@ -57,8 +57,9 @@ namespace CLIHelper
         {
             var builder = new StringBuilder();
             builder.Append(Config.FullName);
-            builder.Append(' ');
-            builder.AppendLine(Config.Version);
+            builder.Append(" (");
+            builder.Append(Config.Version);
+            builder.AppendLine(")");
             if (!string.IsNullOrWhiteSpace(Config.License))
             {
                 builder.AppendLine(Config.License);
@@ -71,7 +72,7 @@ namespace CLIHelper
                 builder.AppendLine("Copyright (C) 2025 Oliver Neuschl");
                 builder.AppendLine("This software uses GPL 3.0 License");
             }
-            
+
             return builder.ToString();
         }
     }
