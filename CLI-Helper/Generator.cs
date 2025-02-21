@@ -1,9 +1,10 @@
-﻿using System.Diagnostics;
+﻿using System.ComponentModel.Design;
+using System.Diagnostics;
 using System.Text;
 
 namespace CLIHelper
 {
-    static class Generator
+    public static class Generator
     {
         /// <summary>
         /// Generates Help string using Config and Registered Arguments
@@ -18,17 +19,21 @@ namespace CLIHelper
             }
             builder.AppendLine();
 
-            foreach (var command in Arguments.GetArgumentsStrings())
+            var strings = Arguments.GetArgumentsStrings();
+            var longest = strings.MaxBy(strings => strings[0].Length)?[0].Length ?? 0;
+            foreach (var command in strings)
             {
-                builder.AppendLine(command);
+                builder.AppendLine(command[0].PadRight(longest, ' ') + " - " + command[1]);
             }
 
             if (Config.HelpExample is not null)
             {
+                builder.AppendLine();
                 var module = Process.GetCurrentProcess().MainModule;
                 if (module is not null)
                 {
-                    builder.Append(module.FileName);
+                    var file = new FileInfo(module.FileName);
+                    builder.Append(file.Name);
                     builder.Append(' ');
                 }
                 builder.AppendLine(Config.HelpExample);

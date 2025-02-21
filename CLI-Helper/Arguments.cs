@@ -7,9 +7,9 @@ namespace CLIHelper
         private static Dictionary<string, object> argumentsData = [];
         private static Dictionary<string, ArgumentDefinition> argumentsDefinitions = [];
 
-        public static List<string> GetArgumentsStrings()
+        public static List<string[]> GetArgumentsStrings()
         {
-            return argumentsDefinitions.Values.Select(v => v.ToString()).ToList();
+            return [.. argumentsDefinitions.Values.Select(v => new string[] { v.ToString(), v.Description })];
         }
 
         public static void ParseArguments(string[] args)
