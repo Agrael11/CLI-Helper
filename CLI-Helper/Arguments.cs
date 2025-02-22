@@ -1,4 +1,6 @@
 ﻿using System.Data;
+using System.IO.Pipes;
+using System.Security.Cryptography.X509Certificates;
 
 namespace CLIHelper
 {
@@ -6,6 +8,7 @@ namespace CLIHelper
     {
         private static Dictionary<string, object> argumentsData = [];
         private static Dictionary<string, ArgumentDefinition> argumentsDefinitions = [];
+        public static string ExtraArguments { get; private set; } = "";
 
         public static List<string[]> GetArgumentsStrings()
         {
@@ -16,10 +19,20 @@ namespace CLIHelper
         {
             argumentsData.Clear();
             argumentsDefinitions.Clear();
+            Config.KeepUnknownAsSingleString = false;
+            Config.IgnoreUnknownArguments = false;
+            ExtraArguments = "";
         }
 
         public static void ParseArguments(string[] args)
         {
+            if (Config.KeepUnknownAsSingleString && Config.IgnoreUnknownArguments)
+            {
+                throw new Exception("Cannot have both KeepUnknownAsSingleString and IgnoreUnknownArguments set to true");
+            }
+
+            List<string> extraArgs = [];
+
             for (int i = 0; i < args.Length; i++)
             {
                 var arg = args[i];
@@ -33,12 +46,30 @@ namespace CLIHelper
                 }
                 else
                 {
+                    if (Config.IgnoreUnknownArguments)
+                    {
+                        continue;
+                    }
+                    if (Config.KeepUnknownAsSingleString)
+                    {
+                        extraArgs.Add(args[i]);
+                        continue;
+                    }
                     throw new Exception($"Unrecognized argument {arg}");
                 }
 
                 var selected = argumentsDefinitions.Where(t => t.Value.Matches(arg));
                 if (!selected.Any())
                 {
+                    if (Config.IgnoreUnknownArguments)
+                    {
+                        continue;
+                    }
+                    if (Config.KeepUnknownAsSingleString)
+                    {
+                        extraArgs.Add(args[i]);
+                        continue;
+                    }
                     throw new Exception($"Unrecognized argument {arg}");
                 }
 
@@ -90,6 +121,7 @@ namespace CLIHelper
                     }
                 }
             }
+            ExtraArguments = string.Join(' ', extraArgs);
         }
 
         public static void RegisterArgument(string name, ArgumentDefinition argument)

@@ -37,6 +37,16 @@
         public static string? HelpFooter = null;
 
         /// <summary>
+        /// Ignoring unknown arguments - incompatible with KeepUnknownAsSingleString
+        /// </summary>
+        public static bool IgnoreUnknownArguments = false;
+
+        /// <summary>
+        /// Keeps Unknown Arguments as single string - incompatible with IgnoreUnkonwnArguments
+        /// </summary>
+        public static bool KeepUnknownAsSingleString = false;
+
+        /// <summary>
         /// Gets long prefix based on configuration (-- or /)
         /// </summary>
         public static string LongPrefix
