@@ -12,12 +12,24 @@
                 var tmpChar = Console.ReadKey();
                 while (tmpChar.KeyChar != 0x1A)
                 {
-                    input += tmpChar.KeyChar;
-                    if (tmpChar.KeyChar == '\r')
+                    if (tmpChar.KeyChar == '\b')
                     {
-                        input += "\n";
-                        Console.WriteLine();
+                        if (input.Length > 0 && input[^1] != '\n')
+                        {
+                            input = input[0..^1];
+                        }
+                        Console.Write(" ");
+                        Console.CursorLeft--;
                     }
+                    else
+                    {
+                        input += tmpChar.KeyChar;
+                        if (tmpChar.KeyChar == '\r')
+                        {
+                            input += "\n";
+                            Console.WriteLine();
+                        }
+                    }   
                     while (!Console.KeyAvailable) ;
                     tmpChar = Console.ReadKey();
                 }
