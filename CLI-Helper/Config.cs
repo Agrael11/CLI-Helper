@@ -37,14 +37,21 @@
         public static string? HelpFooter = null;
 
         /// <summary>
-        /// Ignoring unknown arguments - incompatible with KeepUnknownAsSingleString
+        /// Throws error on unknown arguments, otherwise keeps them as extra arguments
         /// </summary>
-        public static bool IgnoreUnknownArguments = false;
+        public static bool ErrorOnUnkownArguments = true;
 
         /// <summary>
-        /// Keeps Unknown Arguments as single string - incompatible with IgnoreUnkonwnArguments
+        /// Ignoring unknown arguments
         /// </summary>
-        public static bool KeepUnknownAsSingleString = false;
+        [Obsolete("Use IgnoreUnknownArguments instead")]
+        public static bool IgnoreUnknownArguments { get { return !ErrorOnUnkownArguments; } set { ErrorOnUnkownArguments = !value; } }
+
+        /// <summary>
+        /// Keeps Unknown Arguments as single string
+        /// </summary>
+        [Obsolete("Use IgnoreUnknownArguments instead")]
+        public static bool KeepUnknownAsSingleString { get { return !ErrorOnUnkownArguments; } set { ErrorOnUnkownArguments = !value; } }
 
         /// <summary>
         /// Gets long prefix based on configuration (-- or /)

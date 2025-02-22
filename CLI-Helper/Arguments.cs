@@ -1,12 +1,13 @@
-﻿using System.Data;
+﻿using System.Collections.ObjectModel;
+using System.Data;
 
 namespace CLIHelper
 {
     public static class Arguments
     {
-        private static Dictionary<string, object> argumentsData = [];
-        private static Dictionary<string, ArgumentDefinition> argumentsDefinitions = [];
-        public static List<string> ExtraArguments { get; private set; } = new List<string>();
+        private static readonly Dictionary<string, object> argumentsData = [];
+        private static readonly Dictionary<string, ArgumentDefinition> argumentsDefinitions = [];
+        public static List<string> ExtraArguments { get; private set; } = [];
 
         public static List<string[]> GetArgumentsStrings()
         {
@@ -17,18 +18,12 @@ namespace CLIHelper
         {
             argumentsData.Clear();
             argumentsDefinitions.Clear();
-            Config.KeepUnknownAsSingleString = false;
-            Config.IgnoreUnknownArguments = false;
+            Config.ErrorOnUnkownArguments= true;
             ExtraArguments.Clear();
         }
 
         public static void ParseArguments(string[] args)
         {
-            if (Config.KeepUnknownAsSingleString && Config.IgnoreUnknownArguments)
-            {
-                throw new Exception("Cannot have both KeepUnknownAsSingleString and IgnoreUnknownArguments set to true");
-            }
-
             List<string> extraArgs = [];
 
             for (int i = 0; i < args.Length; i++)
@@ -44,31 +39,23 @@ namespace CLIHelper
                 }
                 else
                 {
-                    if (Config.IgnoreUnknownArguments)
+                    if (Config.ErrorOnUnkownArguments)
                     {
-                        continue;
+                        throw new Exception($"Unrecognized argument {arg}");
                     }
-                    if (Config.KeepUnknownAsSingleString)
-                    {
-                        extraArgs.Add(args[i]);
-                        continue;
-                    }
-                    throw new Exception($"Unrecognized argument {arg}");
+                    extraArgs.Add(args[i]);
+                    continue;
                 }
 
                 var selected = argumentsDefinitions.Where(t => t.Value.Matches(arg));
                 if (!selected.Any())
                 {
-                    if (Config.IgnoreUnknownArguments)
+                    if (Config.ErrorOnUnkownArguments)
                     {
-                        continue;
+                        throw new Exception($"Unrecognized argument {arg}");
                     }
-                    if (Config.KeepUnknownAsSingleString)
-                    {
-                        extraArgs.Add(args[i]);
-                        continue;
-                    }
-                    throw new Exception($"Unrecognized argument {arg}");
+                    extraArgs.Add(args[i]);
+                    continue;
                 }
 
                 var argumentName = selected.First().Key;
