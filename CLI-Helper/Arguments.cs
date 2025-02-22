@@ -1,6 +1,4 @@
 ﻿using System.Data;
-using System.IO.Pipes;
-using System.Security.Cryptography.X509Certificates;
 
 namespace CLIHelper
 {
