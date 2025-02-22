@@ -6,7 +6,7 @@ namespace CLIHelper
     {
         private static Dictionary<string, object> argumentsData = [];
         private static Dictionary<string, ArgumentDefinition> argumentsDefinitions = [];
-        public static string ExtraArguments { get; private set; } = "";
+        public static List<string> ExtraArguments { get; private set; } = new List<string>();
 
         public static List<string[]> GetArgumentsStrings()
         {
@@ -19,7 +19,7 @@ namespace CLIHelper
             argumentsDefinitions.Clear();
             Config.KeepUnknownAsSingleString = false;
             Config.IgnoreUnknownArguments = false;
-            ExtraArguments = "";
+            ExtraArguments.Clear();
         }
 
         public static void ParseArguments(string[] args)
@@ -119,7 +119,7 @@ namespace CLIHelper
                     }
                 }
             }
-            ExtraArguments = string.Join(' ', extraArgs);
+            ExtraArguments.AddRange(extraArgs);
         }
 
         public static void RegisterArgument(string name, ArgumentDefinition argument)
