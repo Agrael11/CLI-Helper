@@ -68,7 +68,7 @@ namespace CLIHelper
             if (thisInfo)
             {
                 builder.AppendLine();
-                builder.AppendLine("Uses CLI-Helper (0.2.1)");
+                builder.AppendLine("Uses CLI-Helper (0.3.0)");
                 builder.AppendLine("Copyright (C) 2025 Oliver Neuschl");
                 builder.AppendLine("This software uses GPL 3.0 License");
             }

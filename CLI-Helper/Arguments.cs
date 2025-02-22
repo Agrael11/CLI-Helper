@@ -12,6 +12,12 @@ namespace CLIHelper
             return [.. argumentsDefinitions.Values.Select(v => new string[] { v.ToString(), v.Description })];
         }
 
+        public static void Reset()
+        {
+            argumentsData.Clear();
+            argumentsDefinitions.Clear();
+        }
+
         public static void ParseArguments(string[] args)
         {
             for (int i = 0; i < args.Length; i++)
